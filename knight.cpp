@@ -64,8 +64,8 @@ int Combat_check(int & HP, int level, int levelO){
     return -1;
 
 }
-void CombatMode(int & HP, int event){
-    int damage = baseDamage(event) * levelO(event) * 10;
+void CombatMode(int & HP,int eventID, int event){
+    int damage = baseDamage(eventID) * levelO(event) * 10;
     HP -= damage;
 
 }
@@ -151,16 +151,17 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
 
     //Init Section ------------------------------------------------------------
     int maxHP = HP;
-    
-
-    //Process Section ------------------------------------------------------------
     int shaman_mode = 0;
     int vajsh_mode = 0;
     int Prev_level = level;
     bool lose_combat;
+
+    //Process Section ------------------------------------------------------------
     for (static int event = 1; event <= EventElement; ++event){
-        ShamanMode_check(shaman_mode, HP);
-        VajshMode_check(vajsh_mode, level, Prev_level);
+
+        cout << "during combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
+        cout << "before combat: \n";
+        display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
         if (EventID[event] <= 7){
             switch (Combat_check(HP, level, levelO(event))){
                 case 1: 
@@ -191,7 +192,7 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
                         VajshMode(vajsh_mode, level, maidenkiss, Prev_level);
                         break;
                     default:
-                        CombatMode(HP, event);
+                        CombatMode(HP, EventID[event], event);
                 }
             }
         }
@@ -208,14 +209,24 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
         if (event == EventElement && HP > 0){
             rescue = 1;
         }
-        cout << "after combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
+        cout << "after combat: \n";
+        if (shaman_mode == 1)
+            cout << "shaman_mode enable\n";
+        if (vajsh_mode == 1)
+            cout << "vajsh_mode enable\n";
+        if (shaman_mode == 4)
+            cout << "shaman_mode disable\n";
+        if (vajsh_mode == 4)
+            cout << "vajsh_mode disable\n";
+        ShamanMode_check(shaman_mode, HP);
+        VajshMode_check(vajsh_mode, level, Prev_level);
         display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
+        cout << "\n";
         if (rescue == 1) {
             cout << "Mission complete \n";
             break;
         }
     }    
-
 
     //output Section ------------------------------------------------------------
     display(HP, level, remedy, maidenkiss, phoenixdown, rescue);

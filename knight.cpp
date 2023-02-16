@@ -84,7 +84,7 @@ double baseDamage(int event){
     basedamage[3] = 4.5;
     basedamage[4] = 7.5;
     basedamage[5] = 9.5;
-    
+
     return basedamage[event];
 }
 //case 1->5 ---------------------------------------------------------------------
@@ -149,7 +149,7 @@ int VajshMode_check(int & frog_mode, int & level, int Prev_level){
         level = Prev_level;
         return frog_mode = 0;
     }
-    
+
     return frog_mode += 1;
 }
 
@@ -165,7 +165,7 @@ int SumofOdd(int n){
     return res;
 }
 void MushMario(int & HP, int level, int phoenixdown){
-    int n = ((level + phoenixdown) % 5) + 1;
+    int n = (((level + phoenixdown) % 5) + 1) * 3;
     
     HP += (SumofOdd(n) % 100);
     while (Eratosthenes(HP) == false)
@@ -202,15 +202,20 @@ int* ReadMushGhostFile(string mushghost_input, int & length){
     ifstream mushghost_inp;
     string nln;
     int* mushghost_arr;
+    
     mushghost_inp.open(mushghost_input);
     getline (mushghost_inp, nln);
     istringstream str(nln);
+    
     str >> length;
+    
     string line;
+    
     getline (mushghost_inp, line);
     for (int i = 0; i < line.size(); ++i)
         if (line[i] == ',') 
             line[i] = ' ';
+    
     istringstream str2(line);
     
     mushghost_arr = new int [length];

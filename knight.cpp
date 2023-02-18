@@ -592,9 +592,10 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
                         level = 10;
                         BowserCombat = true;
                     }
-                    else 
+                    else {
                         rescue = 0;
                         BowserCombat = false;
+                    }
                     break;
                 default:
                     if (EventID[event] > 99){

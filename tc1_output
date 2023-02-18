@@ -1,0 +1,105 @@
+during combat with anemy in event 1: MadBear (level:1)
+before combat: 
+HP=998, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=998, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 2: Bandit (level:2)
+before combat: 
+HP=998, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=968, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 3: LordLupin (level:3)
+before combat: 
+HP=968, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=833, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 4: Elf (level:4)
+before combat: 
+HP=833, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=533, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 5: Troll (level:5)
+before combat: 
+HP=533, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=58, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 6: Shaman (level:6)
+before combat: 
+HP=58, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+shaman_mode enable
+HP=11, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 7: MushMario (level:7)
+before combat: 
+HP=11, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+Mush Mario affected HP: 79
+after combat: 
+HP=79, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 8: MushFibo (level:8)
+before combat: 
+HP=79, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+Mush Fibo affected HP: 55
+after combat: 
+HP=55, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 9: Remedy (level:9)
+before combat: 
+HP=55, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+shaman_mode disable
+HP=275, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 10: PhoenixDown (level:5)
+before combat: 
+HP=275, level=1, remedy=0, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=275, level=1, remedy=1, maidenkiss=0, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 11:  (level:5)
+before combat: 
+HP=275, level=1, remedy=1, maidenkiss=0, phoenixdown=0, rescue=-1
+after combat: 
+HP=275, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 12:  (level:5)
+before combat: 
+HP=275, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+after combat: 
+HP=275, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+
+during combat with anemy in event 13: MadBear (level:5)
+before combat: 
+HP=275, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+after combat: 
+HP=225, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+
+during combat with anemy in event 14: Bandit (level:5)
+before combat: 
+HP=225, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+after combat: 
+HP=150, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+
+during combat with anemy in event 15: LordLupin (level:5)
+before combat: 
+HP=150, level=1, remedy=1, maidenkiss=1, phoenixdown=1, rescue=-1
+after combat: 
+HP=998, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 16: Elf (level:6)
+before combat: 
+HP=998, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+after combat: 
+HP=548, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+
+during combat with anemy in event 17: Troll (level:7)
+before combat: 
+HP=548, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=-1
+Mission Fail 
+HP=-117, level=1, remedy=1, maidenkiss=1, phoenixdown=0, rescue=0

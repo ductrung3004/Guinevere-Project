@@ -2,8 +2,9 @@
 
 //Show Function ------------------------------------------------------------
 
-void display(int HP, int level, int remedy, int maidenkiss, int phoenixdown, int rescue) {
-    cout << "HP=" << HP
+void display(ofstream & outfile, int HP, int level, int remedy, int maidenkiss, int phoenixdown, int rescue) {
+    
+    outfile << "HP=" << HP
         << ", level=" << level
         << ", remedy=" << remedy
         << ", maidenkiss=" << maidenkiss
@@ -13,11 +14,10 @@ void display(int HP, int level, int remedy, int maidenkiss, int phoenixdown, int
 
 //Process Function ------------------------------------------------------------
 
-
-// Prime checking
-bool Eratosthenes(int num){
+// Prime checking----------------------------------------------------------
+void Eratosthenes(bool* & check){
     int N = 1000;
-    bool check[N + 1];
+    check = new bool[N + 1];
     for (int i = 2; i <= N; i++) {
         check[i] = true;
     }
@@ -28,10 +28,9 @@ bool Eratosthenes(int num){
             }
         }
     }
-    
-    return check[num];
+    return;
 }
-
+// Hero checking ---------------------------------------------------
 bool Arthur_check(int HP){
     if (HP == 999)
         return true;
@@ -39,13 +38,13 @@ bool Arthur_check(int HP){
 
 }
 
-bool Lancelot_check(int HP){
-    if (Eratosthenes(HP))
+bool Lancelot_check(int HP, bool* Prime){
+    if (Prime[HP])
         return true;
     return false;
 }
 
-//Anemies Function
+//Anemies Checking-----------------------------------------------------
 int levelO(int event){
     int b = event % 10;
     int level = event > 6 ? (b > 5 ? b : 5) : b;
@@ -70,12 +69,13 @@ string anemy_name(int eventID){
     name[18] = "Merlin";
     name[19] = "Asclepius";
     name[99] = "Bowser";
+    
     if (eventID < 100)
         return name[eventID];
     else
-        return  "MushGhost";
-    
+        return  "MushGhost";  
 }
+
 double baseDamage(int event){
     double basedamage[6];
     
@@ -87,6 +87,7 @@ double baseDamage(int event){
 
     return basedamage[event];
 }
+
 //case 1->5 ---------------------------------------------------------------------
 int Combat_check(int & HP, int level, int levelO){
     if (level > levelO) 
@@ -96,12 +97,14 @@ int Combat_check(int & HP, int level, int levelO){
     
     return -1;
 }
+
 void CombatMode(int & HP,int eventID, int event){
     int damage = baseDamage(eventID) * levelO(event) * 10;
     HP -= damage;
 }
 
-//case 6--------------------------------------------------------------------------------------------
+//case 6 (Shaman)--------------------------------------------------------------------------------------------
+
 int ShamanMode(int & smaller_mode, int & HP, int & remedy){
     if (smaller_mode != 0) return smaller_mode;
     if (HP < 5)
@@ -117,6 +120,7 @@ int ShamanMode(int & smaller_mode, int & HP, int & remedy){
     
     return smaller_mode = 1; 
 }
+
 int ShamanMode_check(int & smaller_mode, int & HP, int maxHP){
     if (smaller_mode == 0) 
         return smaller_mode = 0;
@@ -128,7 +132,8 @@ int ShamanMode_check(int & smaller_mode, int & HP, int maxHP){
     return smaller_mode += 1;
 }
 
-//case 7--------------------------------------------------------------------------------------------
+//case 7 (Siren Vajsh)--------------------------------------------------------------------------------------------
+
 int VajshMode(int & frog_mode, int & level, int & maidenkiss, int & Prev_level){
     
     if (frog_mode != 0) 
@@ -141,6 +146,7 @@ int VajshMode(int & frog_mode, int & level, int & maidenkiss, int & Prev_level){
     level = 1;
     return frog_mode = 1;
 }
+
 int VajshMode_check(int & frog_mode, int & level, int Prev_level){
    
    if (frog_mode == 0) 
@@ -153,7 +159,8 @@ int VajshMode_check(int & frog_mode, int & level, int Prev_level){
     return frog_mode += 1;
 }
 
-//case 11--------------------------------------------------------------------------------------------
+//case 11 (Mush Mario)--------------------------------------------------------------------------------------------
+
 int SumofOdd(int n){
     int odd = 99;
     int res = 0;
@@ -164,17 +171,17 @@ int SumofOdd(int n){
     
     return res;
 }
-void MushMario(int & HP, int level, int phoenixdown){
+void MushMario(int & HP, int level, int phoenixdown, bool* Prime){
     int n = (((level + phoenixdown) % 5) + 1) * 3;
     
     HP += (SumofOdd(n) % 100);
-    while (Eratosthenes(HP) == false)
+    while (Prime[HP] == false)
         HP++;
     
     return;
 }
 
-//case 12--------------------------------------------------------------------------------------------
+//case 12 (Mush Fibo)--------------------------------------------------------------------------------------------
 int Fibonacci(int n){
     int fibo[15];
     
@@ -197,7 +204,9 @@ void MushFibo(int & HP){
     return;
 }
 
-//case 13--------------------------------------------------------------------------------------------
+//case 13 (Mush Ghost)--------------------------------------------------------------------------------------------
+
+//read file function ---------
 int* ReadMushGhostFile(string mushghost_input, int & length){
     ifstream mushghost_inp;
     string nln;
@@ -228,9 +237,9 @@ int* ReadMushGhostFile(string mushghost_input, int & length){
     mushghost_inp.close();
     return mushghost_arr;
 }
-
-void index_check(int* array, int length, int & index_max, int & index_min){
-    int* res = new int[2];
+//affectID = 1 -------
+int affect1(int* array, int length){
+    int index_max, index_min;
     int maxi = array[length - 1];
     int mini = array[length - 1];
     index_max = length - 1;
@@ -245,24 +254,97 @@ void index_check(int* array, int length, int & index_max, int & index_min){
             mini = array[i];
         }
     }
-    return; 
+    return index_max + index_min; 
 }
 
-void mushghost_affect(int & HP, char affect, int* array, int length){
-    switch (affect){
+//affectID = 2 -----------
+int affect2(int* array, int length){
+    int mtx;
+    int mti; 
+    for (int i = 1; i < length; i++){
+        if (array[i] > array[i - 1]){
+            mtx = array[i];
+            mti = i;
+        }
+        else
+            break;
+    }
+    for (int i = mti + 1; i < length; i++){
+        if (array[i] < array[i - 1])
+            continue;
+        else
+            return -5;
+    }
+    return mtx + mti;
+}
+//affectID = 3, 4----------------
+void Math_function(int* & array, int length){
+    for (int i = 0; i < length; i++){
+        if (array[i] < 0) 
+            array[i] *= -1;
+        array[i] = (17 * array[i] + 9) % 257;
+    
+    }
+}
+
+//affectID = 3 --------
+int affect3(int* array, int length){
+    Math_function(array, length);
+    int index_max, index_min;
+    int maxi = array[0];
+    int mini = array[0];
+    index_max = 0;
+    index_min = 0;
+    for (int i = 0; i < length - 1 ; i++){
+        if (maxi < array[i]){
+            index_max = i;
+            maxi = array[i];
+        }
+        if (mini > array[i]){
+            index_min = i;
+            mini = array[i];
+        }
+    }
+    
+    return index_max + index_min;
+}
+
+//afectID = 4------------
+
+int MiddleOfThree(int a, int b, int c){
+    if(a == b && a == c)
+        return -12;
+    if ((b < a && a < c) || (c < a && a < b))
+        return a;
+    if ((a < b && b < c) || (c < b && b < a))
+        return b + 1;
+    return c + 2;
+
+}
+int affect4(int* array, int length){
+    Math_function(array, length);
+    return MiddleOfThree(array[0], array[1], array[2]);
+}
+
+//main case function --------
+void mushghost_affect(int & HP, char affectID, int* array, int length){
+    int HP_change;
+    switch (affectID){
         case '1':
-            int index_max, index_min;
-            index_check(array, length, index_max, index_min);
-            HP -= (index_max + index_min);
+            HP_change = affect1(array, length);
+            HP -= HP_change;
             break;
         case '2':
-
+            HP_change = affect2(array, length);
+            HP -= HP_change;
             break;
         case '3':
-
+            HP_change = affect3(array, length);
+            HP -= HP_change;
             break;
         case '4':
-
+            HP_change = affect4(array, length);
+            HP -= HP_change;
             break;
     }
     
@@ -295,7 +377,7 @@ int BonusHP_check(string name){
             return 0;
     return 2;
 }
-
+// read file function AND main case function ------------
 void ReadMerlinFile(string merlin_input, int & HP){
     ifstream merlin_inp;
     merlin_inp.open(merlin_input);
@@ -314,7 +396,9 @@ void ReadMerlinFile(string merlin_input, int & HP){
     merlin_inp.close();
     return;
 }
-//case 19--------------------------------------------------------------------------------------------
+//case 19 (A)--------------------------------------------------------------------------------------------
+
+// read file function -----------
 int** ReadAsclepiusFile(string asclepius_input, int & rows, int & cols){
     int** matrix;
     ifstream asclepius_inp;
@@ -327,7 +411,6 @@ int** ReadAsclepiusFile(string asclepius_input, int & rows, int & cols){
     getline(asclepius_inp, colsline);
     istringstream coll(colsline);
     coll >> cols;
-    cout << rows << ' ' << cols << endl;
     matrix = new int*[rows];
     for (int row = 0; row < rows; ++row){
         string line;
@@ -338,15 +421,14 @@ int** ReadAsclepiusFile(string asclepius_input, int & rows, int & cols){
         matrix[row] = new int[cols];
         while(str >> x){
             matrix[row][col] = x;
-            cout << "matrix[" << row << "][" << col << "]" << matrix[row][col];
             col += 1;
         }
-        cout << endl;
     }
     asclepius_inp.close();
     return matrix;
 }
 
+// main case function ------------
 void PickUp(int** matrix, int rows, int cols, int & remedy, int & maidenkiss, int & phoenixdown){
     for (int r = 0; r < rows; r++){
         int medicines_pickup = 0;
@@ -375,6 +457,9 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
     //Input Section ------------------------------------------------------------
     ifstream infile;
     infile.open(file_input);
+    string file_output("tc1_output");
+    ofstream outfile;
+    outfile.open(file_output);
     string HeroInfo, EventPeriod, otherfiles;
     rescue = -1;
     getline(infile, HeroInfo);
@@ -398,27 +483,29 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
     string mush_ghost, asclepius_pack, merlin_pack;
     istringstream inputOtherfiles(otherfiles);
     inputOtherfiles >> mush_ghost >> asclepius_pack >> merlin_pack;
-
+    infile.close();
     //Init Section ------------------------------------------------------------
     int maxHP = HP;
     int shaman_mode = 0;
     int vajsh_mode = 0;
-    int Prev_level = level;
+    int Prev_level;
     bool lose_combat;
     bool Asclepius_meet_check = false;
     bool Merlin_meet_check = false;
-    bool Arthur = Arthur_check(maxHP);
-    bool Lancelot = Lancelot_check(maxHP);
     bool BowserCombat = true;
+    bool* Prime_array;
+    Eratosthenes(Prime_array);
+    bool Lancelot = Lancelot_check(maxHP, Prime_array);
+    bool Arthur = Arthur_check(maxHP);
     //Process Section ------------------------------------------------------------
     for (static int event = 1; event <= EventElement; ++event){
         if (EventID[event] == 0 || Arthur){
             rescue = 1;
             break;
         }
-        cout << "during combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
-        cout << "before combat: \n";
-        display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
+        outfile << "during combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
+        outfile << "before combat: \n";
+        display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
         if (EventID[event] <= 7){
             if (Lancelot){
                 level += 1;
@@ -452,10 +539,12 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
                         rescue = 1;
                         break;
                     case 6:
-                        ShamanMode(shaman_mode, HP, remedy);
+                        if (shaman_mode == 0 && vajsh_mode == 0)
+                            ShamanMode(shaman_mode, HP, remedy);
                         break;
                     case 7:
-                        VajshMode(vajsh_mode, level, maidenkiss, Prev_level);
+                        if (shaman_mode == 0 && vajsh_mode == 0)
+                            VajshMode(vajsh_mode, level, maidenkiss, Prev_level);
                         break;
                     default:
                         CombatMode(HP, EventID[event], event);
@@ -465,13 +554,13 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
         else
             switch(EventID[event]){
                 case 11:
-                    MushMario(HP, level, phoenixdown);
+                    MushMario(HP, level, phoenixdown, Prime_array);
                     HP = min (maxHP, HP);
-                    cout << "Mush Mario affected HP: " << HP << endl;
+                    outfile << "Mush Mario affected HP: " << HP << endl;
                     break;
                 case 12:
                     MushFibo(HP);
-                    cout << "Mush Fibo affected HP: " << HP << endl;
+                    outfile << "Mush Fibo affected HP: " << HP << endl;
                     break;
                 case 15:
                     remedy = min(remedy+1, 99);
@@ -534,30 +623,31 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
             }
         }
         
-        cout << "after combat: \n";
+        outfile << "after combat: \n";
         if (shaman_mode == 1)
-            cout << "shaman_mode enable\n";
+            outfile << "shaman_mode enable\n";
         if (vajsh_mode == 1)
-            cout << "vajsh_mode enable\n";
+            outfile << "vajsh_mode enable\n";
         if (shaman_mode == 4)
-            cout << "shaman_mode disable\n";
+            outfile << "shaman_mode disable\n";
         if (vajsh_mode == 4)
-            cout << "vajsh_mode disable\n";
+            outfile << "vajsh_mode disable\n";
         ShamanMode_check(shaman_mode, HP, maxHP);
         VajshMode_check(vajsh_mode, level, Prev_level);
-        display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
-        cout << "\n";
+        display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
+        outfile << "\n";
         
         if (event == EventElement){
             rescue = 1;
         }
     }    
     if (rescue == 1)
-        cout << "Mission complete \n";
+        outfile << "Mission complete \n";
     else 
 
-        cout << "Mission Fail \n";
-
+        outfile << "Mission Fail \n";
+    
     //output Section ------------------------------------------------------------
-    display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
+    display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
+    outfile.close();
 }

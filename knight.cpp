@@ -121,11 +121,11 @@ int ShamanMode(int & smaller_mode, int & HP, int & remedy){
     return smaller_mode = 1; 
 }
 
-int ShamanMode_check(int & smaller_mode, int & HP, int maxHP){
+int ShamanMode_check(int & smaller_mode, int & HP, int maxHP, int remedy){
     if (smaller_mode == 0) 
         return smaller_mode = 0;
     
-    if (smaller_mode == 4) {
+    if (smaller_mode == 4 || remedy > 0) {
         HP = min(HP*5, maxHP);
         return smaller_mode = 0;
     }
@@ -147,11 +147,11 @@ int VajshMode(int & frog_mode, int & level, int & maidenkiss, int & Prev_level){
     return frog_mode = 1;
 }
 
-int VajshMode_check(int & frog_mode, int & level, int Prev_level){
+int VajshMode_check(int & frog_mode, int & level, int Prev_level, int maidenkiss){
    
    if (frog_mode == 0) 
         return frog_mode = 0;
-    if (frog_mode == 4) {
+    if (frog_mode == 4 || maidenkiss > 0) {
         level = Prev_level;
         return frog_mode = 0;
     }
@@ -314,9 +314,9 @@ int affect3(int* array, int length){
 int MiddleOfThree(int a, int b, int c){
     if(a == b && a == c)
         return -12;
-    if ((b < a && a < c) || (c < a && a < b))
+    if ((b < a && a <= c) || (c < a && a <= b))
         return a;
-    if ((a < b && b < c) || (c < b && b < a))
+    if ((a < b && b <= c) || (c < b && b < a))
         return b + 1;
     return c + 2;
 
@@ -354,7 +354,7 @@ void mushghost_affect(int & HP, char affectID, int* array, int length){
 
 //case 18--------------------------------------------------------------------------------------------
 int BonusHP_check(string name){
-    if (name == "Merlin" || name == "merlin")
+    if (name.find("Merlin") != string::npos || name.find("merlin") != string::npos)
         return 3;
     char merlin[6];
     merlin[0] = 'm';
@@ -593,6 +593,7 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
                         BowserCombat = true;
                     }
                     else 
+                        rescue = 0;
                         BowserCombat = false;
                     break;
                 default:
@@ -616,6 +617,8 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
             if (phoenixdown > 0){
                 phoenixdown -= 1;
                 HP = maxHP;
+                shaman_mode = 0;
+                vajsh_mode = 0;
             }
             else {
                 rescue = 0;
@@ -632,8 +635,8 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
             outfile << "shaman_mode disable\n";
         if (vajsh_mode == 4)
             outfile << "vajsh_mode disable\n";
-        ShamanMode_check(shaman_mode, HP, maxHP);
-        VajshMode_check(vajsh_mode, level, Prev_level);
+        ShamanMode_check(shaman_mode, HP, maxHP, remedy);
+        VajshMode_check(vajsh_mode, level, Prev_level, maidenkiss);
         display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
         outfile << "\n";
         
@@ -644,7 +647,6 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
     if (rescue == 1)
         outfile << "Mission complete \n";
     else 
-
         outfile << "Mission Fail \n";
     
     //output Section ------------------------------------------------------------

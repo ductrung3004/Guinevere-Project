@@ -2,9 +2,9 @@
 
 //Show Function ------------------------------------------------------------
 
-void display(ofstream & outfile, int HP, int level, int remedy, int maidenkiss, int phoenixdown, int rescue) {
+void display(/*ofstream & outfile,*/ int HP, int level, int remedy, int maidenkiss, int phoenixdown, int rescue) {
     
-    outfile << "HP=" << HP
+    /*outfile*/cout << "HP=" << HP
         << ", level=" << level
         << ", remedy=" << remedy
         << ", maidenkiss=" << maidenkiss
@@ -278,34 +278,37 @@ int affect2(int* array, int length){
     return mtx + mti;
 }
 //affectID = 3, 4----------------
-void Math_function(int* & array, int length){
+int* Math_function(int* array, int length){
+    int* tmp_array = new int[length];
     for (int i = 0; i < length; i++){
         if (array[i] < 0) 
-            array[i] *= -1;
-        array[i] = (17 * array[i] + 9) % 257;
+            tmp_array[i] = array[i]* (-1);
+        tmp_array[i] = (17 * array[i] + 9) % 257;
     
     }
+    for (int i = 0; i < length; i++){
+    }
+    return tmp_array;
 }
 
 //affectID = 3 --------
 int affect3(int* array, int length){
-    Math_function(array, length);
+    int* tmp_array = Math_function(array, length);
     int index_max, index_min;
-    int maxi = array[0];
-    int mini = array[0];
+    int maxi = tmp_array[0];
+    int mini = tmp_array[0];
     index_max = 0;
     index_min = 0;
-    for (int i = 0; i < length - 1 ; i++){
-        if (maxi < array[i]){
+    for (int i = 0; i < length ; i++){
+        if (maxi < tmp_array[i]){
             index_max = i;
-            maxi = array[i];
+            maxi = tmp_array[i];
         }
-        if (mini > array[i]){
+        if (mini > tmp_array[i]){
             index_min = i;
-            mini = array[i];
+            mini = tmp_array[i];
         }
     }
-    
     return index_max + index_min;
 }
 
@@ -322,8 +325,9 @@ int MiddleOfThree(int a, int b, int c){
 
 }
 int affect4(int* array, int length){
-    Math_function(array, length);
-    return MiddleOfThree(array[0], array[1], array[2]);
+    int* tmp_array = Math_function(array, length);
+    int res = MiddleOfThree(tmp_array[0], tmp_array[1], tmp_array[2]);
+    return res;
 }
 
 //main case function --------
@@ -344,7 +348,7 @@ void mushghost_affect(int & HP, char affectID, int* array, int length){
             break;
         case '4':
             HP_change = affect4(array, length);
-            HP -= HP_change;
+            HP -= HP_change; 
             break;
     }
     
@@ -457,9 +461,9 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
     //Input Section ------------------------------------------------------------
     ifstream infile;
     infile.open(file_input);
-    string file_output("tc1_output");
-    ofstream outfile;
-    outfile.open(file_output);
+    //string file_output("tc1_output");
+    //ofstream outfile;
+    //outfile.open(file_output);
     string HeroInfo, EventPeriod, otherfiles;
     rescue = -1;
     getline(infile, HeroInfo);
@@ -503,9 +507,9 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
             rescue = 1;
             break;
         }
-        outfile << "during combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
-        outfile << "before combat: \n";
-        display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
+        //outfile << "during combat with anemy in event " << event << ": "<< anemy_name(EventID[event])<< " (level:" << levelO(event) << ")" << "\n";
+        //outfile << "before combat: \n";
+        //display(/*outfile,*/ HP, level, remedy, maidenkiss, phoenixdown, rescue);
         if (EventID[event] <= 7){
             if (Lancelot){
                 level += 1;
@@ -556,11 +560,11 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
                 case 11:
                     MushMario(HP, level, phoenixdown, Prime_array);
                     HP = min (maxHP, HP);
-                    outfile << "Mush Mario affected HP: " << HP << endl;
+                    //outfile << "Mush Mario affected HP: " << HP << endl;
                     break;
                 case 12:
                     MushFibo(HP);
-                    outfile << "Mush Fibo affected HP: " << HP << endl;
+                    //outfile << "Mush Fibo affected HP: " << HP << endl;
                     break;
                 case 15:
                     remedy = min(remedy+1, 99);
@@ -627,7 +631,7 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
             }
         }
         
-        outfile << "after combat: \n";
+        /*outfile << "after combat: \n";
         if (shaman_mode == 1)
             outfile << "shaman_mode enable\n";
         if (vajsh_mode == 1)
@@ -635,22 +639,22 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
         if (shaman_mode == 4)
             outfile << "shaman_mode disable\n";
         if (vajsh_mode == 4)
-            outfile << "vajsh_mode disable\n";
+            outfile << "vajsh_mode disable\n";*/
         ShamanMode_check(shaman_mode, HP, maxHP, remedy);
         VajshMode_check(vajsh_mode, level, Prev_level, maidenkiss);
-        display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
-        outfile << "\n";
+        display(/*outfile,*/ HP, level, remedy, maidenkiss, phoenixdown, rescue);
+        //outfile << "\n";
         
         if (event == EventElement){
             rescue = 1;
         }
     }    
-    if (rescue == 1)
+    /*if (rescue == 1)
         outfile << "Mission complete \n";
     else 
-        outfile << "Mission Fail \n";
+        outfile << "Mission Fail \n";*/
     
     //output Section ------------------------------------------------------------
-    display(outfile, HP, level, remedy, maidenkiss, phoenixdown, rescue);
-    outfile.close();
+    //display(/*outfile*/, HP, level, remedy, maidenkiss, phoenixdown, rescue);
+    //outfile.close();
 }
